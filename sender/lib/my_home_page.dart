@@ -16,13 +16,14 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   TextEditingController tokenController = TextEditingController();
+  TextEditingController topicController = TextEditingController();
 
   var logger = Logger(
     printer: PrettyPrinter(),
   );
 
-  void _sendMessage() async {
-    ServerResult result = await fcmSend.sendMessage(
+  void _sendMessageByToken() async {
+    ServerResult result = await fcmSend.sendMessageWithToken(
       title: titleController.text,
       message: messageController.text,
       token: tokenController.text,
@@ -34,6 +35,22 @@ class _MyHomePageState extends State<MyHomePage> {
       Fluttertoast.showToast(msg: "메시지 전송 실패");
     }
   }
+
+  void _sendMessageByTopic() async {
+    ServerResult result = await fcmSend.sendMessageWithTopic(
+      title: titleController.text,
+      message: messageController.text,
+      topic: topicController.text,
+    );
+
+    if (result.successful) {
+      Fluttertoast.showToast(msg: "메시지 전송 성공");
+    } else {
+      Fluttertoast.showToast(msg: "메시지 전송 실패");
+    }
+  }
+
+  int fcmMode = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +64,45 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    children: [
+                      Radio(
+                          value: 0,
+                          groupValue: fcmMode,
+                          onChanged: (index) {
+                            setState(() {
+                              fcmMode = index as int;
+                            });
+                          }),
+                      const Expanded(
+                          child: Text('Topic', style: TextStyle(fontSize: 17)))
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    children: [
+                      Radio(
+                          value: 1,
+                          groupValue: fcmMode,
+                          onChanged: (index) {
+                            setState(() {
+                              fcmMode = index as int;
+                            });
+                          }),
+                      const Expanded(
+                          child: Text('Token', style: TextStyle(fontSize: 17)))
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             TextField(
               controller: titleController,
               decoration: const InputDecoration(
@@ -64,16 +120,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 15),
             TextField(
-              controller: tokenController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: '토큰',
+              controller: fcmMode == 0 ? topicController : tokenController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: fcmMode == 0 ? 'Topic' : 'Token',
               ),
             ),
             const SizedBox(height: 15),
             ElevatedButton(
               onPressed: () {
-                _sendMessage();
+                fcmMode == 0 ? _sendMessageByTopic() : _sendMessageByToken();
               },
               child: const Text("문자 전송"),
             )

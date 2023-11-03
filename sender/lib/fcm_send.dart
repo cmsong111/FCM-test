@@ -24,7 +24,7 @@ class FcmSend {
   }
 
   // 메시지 전송
-  Future<ServerResult> sendMessage(
+  Future<ServerResult> sendMessageWithToken(
       {required String title,
       required String message,
       required String token}) async {
@@ -40,6 +40,28 @@ class FcmSend {
             ttl: '60s',
           ),
           token: token,
+        ),
+      ),
+    );
+  }
+
+  // 메시지 전송
+  Future<ServerResult> sendMessageWithTopic(
+      {required String title,
+      required String message,
+      required String topic}) async {
+    return server.send(
+      FirebaseSend(
+        validateOnly: false,
+        message: FirebaseMessage(
+          notification: FirebaseNotification(
+            title: title,
+            body: message,
+          ),
+          android: const FirebaseAndroidConfig(
+            ttl: '60s',
+          ),
+          topic: topic,
         ),
       ),
     );
