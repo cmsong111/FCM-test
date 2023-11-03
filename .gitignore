@@ -1,2 +1,3 @@
 
 receiver/lib/firebase_options.dart
+sender/json/firebase_admin_sdk.json
