@@ -1,3 +1,11 @@
 
 receiver/lib/firebase_options.dart
 sender/json/firebase_admin_sdk.json
+receiver/macos/firebase_app_id_file.json
+receiver/ios/Runner/GoogleService-Info.plist
+receiver/ios/firebase_app_id_file.json
+sender/macos/Runner/GoogleService-Info.plist
+sender/macos/firebase_app_id_file.json
+sender/lib/firebase_options.dart
+sender/ios/Runner/GoogleService-Info.plist
+sender/ios/firebase_app_id_file.json
