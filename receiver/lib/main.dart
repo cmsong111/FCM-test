@@ -1,10 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receiver/firebase_options.dart';
+import 'package:receiver/src/config/route.dart';
+import 'package:receiver/src/core/resources/app_constant.dart';
 import 'package:receiver/src/injector.dart';
 import 'package:receiver/src/presentation/providers/token_provider.dart';
-import 'package:receiver/src/presentation/views/my_home_page.dart';
+
+var initialRoute = AppRoute.login;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +16,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   setupLocator();
+
+  FirebaseAuth.instance.currentUser != null
+      ? initialRoute = AppRoute.home
+      : initialRoute = AppRoute.login;
+
   runApp(const MyApp());
 }
 
@@ -31,7 +40,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const MyHomePage(),
+        routes: appRoute,
+        initialRoute: initialRoute,
       ),
     );
   }
