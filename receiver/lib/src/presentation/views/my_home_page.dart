@@ -13,7 +13,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TokenProvider _tokenProvider;
+  late UserProvider _userProvider;
+  final TextEditingController _locationController = TextEditingController();
   void permissionRequest() async {
     FirebaseMessaging.instance.requestPermission(
       badge: true,
@@ -32,13 +33,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // 화면 로드 시 토큰을 가져온다. (콜백)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _tokenProvider.setToken();
+      // _userProvider.setToken();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _tokenProvider = Provider.of<TokenProvider>(context);
+    _userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              _tokenProvider.refreshToken();
+              // _userProvider.refreshToken();
             },
             icon: const Icon(Icons.refresh),
           )
@@ -54,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: ChangeNotifierProvider<TokenProvider>(
-          create: (_) => _tokenProvider,
+        child: ChangeNotifierProvider<UserProvider>(
+          create: (_) => _userProvider,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,15 +66,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               Text(
-                _tokenProvider.token ?? "No token yet",
+                _userProvider.user?.token ?? "",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               ElevatedButton(
                 onPressed: () {
                   Clipboard.setData(
-                      ClipboardData(text: _tokenProvider.token ?? ""));
+                      ClipboardData(text: _userProvider.user?.token ?? ""));
                 },
                 child: const Text("Copy token"),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "현재 위치:",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              TextField(
+                controller: _locationController,
               )
             ],
           ),

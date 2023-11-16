@@ -1,27 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:receiver/src/data/datasources/remote_datasource.dart';
+import 'package:receiver/src/data/models/User.dart';
 
-class FirebaseDataSource implements RemoteDataSource {
-  @override
-  Future<String?> getToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
+class FirebaseDataSource {
+  Future<UserEntity> getUser() async {
+    String userUid = await FirebaseAuth.instance.currentUser!.uid;
+    print(userUid);
 
-    await FirebaseFirestore.instance
-        .collection('User')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
-      "FcmToken": token,
-      "locate": "/location/Busan/Busanjin-gu/Hwaji-ro"
-    });
+    UserEntity user = await FirebaseFirestore.instance
+        .doc("User/$userUid")
+        .get()
+        .then((value) => UserEntity.fromMap(value.data()!));
 
-    return token;
-  }
-
-  @override
-  Future<String?> refreshToken() async {
-    await FirebaseMessaging.instance.deleteToken();
-    return getToken();
+    return user;
   }
 }

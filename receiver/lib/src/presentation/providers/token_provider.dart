@@ -1,21 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:receiver/src/data/repositories/token_repository.dart';
+import 'package:receiver/src/data/models/User.dart';
+import 'package:receiver/src/data/repositories/user_repository.dart';
 import 'package:receiver/src/injector.dart';
 
-class TokenProvider extends ChangeNotifier {
-  TokenRepository tokenRepository = locator<TokenRepository>();
+class UserProvider extends ChangeNotifier {
+  final UserRepository _userRepository = locator<UserRepository>();
 
-  String? _token;
+  UserEntity user = UserEntity(token: "not initailized", location: []);
 
-  String? get token => _token;
-
-  void setToken() async {
-    _token = await tokenRepository.getToken();
-    notifyListeners();
+  UserProvider() {
+    init();
   }
 
-  void refreshToken() async {
-    _token = await tokenRepository.refreshToken();
+  void init() async {
+    UserEntity user = await _userRepository.getUserInfo() ??
+        UserEntity(token: "not initailized", location: []);
+
+    this.user = user;
     notifyListeners();
   }
 }
