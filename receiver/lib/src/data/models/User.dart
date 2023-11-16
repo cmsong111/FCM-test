@@ -1,5 +1,5 @@
 class UserEntity {
-  final String? token;
+  String? token;
   final List location;
 
   UserEntity({required this.token, required this.location});
@@ -13,8 +13,8 @@ class UserEntity {
 
   Map<String, dynamic> toMap() {
     return {
-      'fcmToken': token,
-      'locate': location,
+      'token': token,
+      'location': location,
     };
   }
 }

@@ -44,9 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (result.successful) {
-      Fluttertoast.showToast(msg: "메시지 전송 성공");
+      Fluttertoast.showToast(msg: "topic 메시지 전송 성공");
     } else {
-      Fluttertoast.showToast(msg: "메시지 전송 실패");
+      Fluttertoast.showToast(msg: "topic 메시지 전송 실패");
+      print(result.errorPhrase);
     }
   }
 
