@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^4.12.2
   google_sign_in: ^6.1.5
   auth_buttons: ^3.0.2
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:

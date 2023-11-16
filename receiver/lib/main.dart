@@ -6,7 +6,7 @@ import 'package:receiver/firebase_options.dart';
 import 'package:receiver/src/config/route.dart';
 import 'package:receiver/src/core/resources/app_constant.dart';
 import 'package:receiver/src/injector.dart';
-import 'package:receiver/src/presentation/providers/token_provider.dart';
+import 'package:receiver/src/presentation/providers/user_provider.dart';
 
 var initialRoute = AppRoute.login;
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-            create: (BuildContext context) => TokenProvider()),
+            create: (BuildContext context) => UserProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
